@@ -1,0 +1,115 @@
+import java.util.Scanner;
+
+public class SimpleMountains {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String[] names = {"Эверест", "Эльбрус", "Фудзияма", "Казбек"};
+        String[] locations = {"Непал", "Россия", "Япония", "Кавказ"};
+        double[] heights = {8848, 5642, 3776, 5033};
+
+        int maxIndex = getMaxIndex(heights);
+        System.out.println("Самая высокая: " + names[maxIndex] + " - " + heights[maxIndex] + "м");
+
+        System.out.println("\nВершины выше 1000м:");
+        for (int i = 0; i < heights.length; i++) {
+            if (heights[i] > 1000) {
+                System.out.println(names[i] + " - " + heights[i] + "м");
+            }
+        }
+
+        sortMountains(names, locations, heights);
+
+        ListMountains(names, locations, heights);
+
+        System.out.print("\nВведите название: ");
+        String search = scanner.nextLine().trim();
+
+        int index = findMountainIndex(names, search);
+        if (index != -1) {
+            showMountainInfo(names, locations, heights, index);
+
+            System.out.println("Что менять? 1 - название, 2 - место, 3 - высоту");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Новое название: ");
+                    names[index] = scanner.nextLine();
+                    break;
+                case 2:
+                    System.out.print("Новое место: ");
+                    locations[index] = scanner.nextLine();
+                    break;
+                case 3:
+                    System.out.print("Новая высота: ");
+                    heights[index] = scanner.nextDouble();
+                    scanner.nextLine();
+                    break;
+                default:
+                    System.out.println("Некорректный выбор");
+            }
+
+            showMountainInfo(names, locations, heights, index);
+        } else {
+            System.out.println("Вершина не найдена!");
+        }
+
+        scanner.close();
+    }
+
+    static int getMaxIndex(double[] array) {
+        int maxIdx = 0;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > array[maxIdx]) {
+                maxIdx = i;
+            }
+        }
+        return maxIdx;
+    }
+
+    static void sortMountains(String[] names, String[] locations, double[] heights) {
+        for (int i = 0; i < heights.length - 1; i++) {
+            for (int j = i + 1; j < heights.length; j++) {
+                if (heights[i] > heights[j]) {
+                    swap(i, j, names, locations, heights);
+                }
+            }
+        }
+    }
+
+    static void swap(int i, int j, String[] names, String[] locations, double[] heights) {
+        String tempName = names[i];
+        names[i] = names[j];
+        names[j] = tempName;
+
+        String tempLoc = locations[i];
+        locations[i] = locations[j];
+        locations[j] = tempLoc;
+
+        double tempH = heights[i];
+        heights[i] = heights[j];
+        heights[j] = tempH;
+    }
+
+    static int findMountainIndex(String[] names, String searchTerm) {
+        for (int i = 0; i < names.length; i++) {
+            if (names[i].equalsIgnoreCase(searchTerm)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    static void showMountainInfo(String[] names, String[] locations, double[] heights, int index) {
+        System.out.println("Вершина: " + names[index] + " | " + locations[index] + " | " + heights[index] + "м");
+    }
+
+    static void ListMountains(String[] names, String[] locations, double[] heights) {
+        System.out.println("\nОтсортированные вершины:");
+        for (int i = 0; i < names.length; i++) {
+            System.out.println(names[i] + " | " + locations[i] + " | " + heights[i] + "м");
+        }
+    }
+}
